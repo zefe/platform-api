@@ -4,6 +4,9 @@ import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
 import corsConfing from './config/cors'
+import path from 'path'
+
+import router from './routes';
 
 //  app
 const app = express();
@@ -13,6 +16,8 @@ app.use(morgan('dev'))
 app.use(cors(corsConfing))
 //recibir datos json de un formulario
 app.use(express.json())
+app.use(express.urlencoded({extended: true}))
+app.use(express.static(path.join(__dirname, 'public')))
 
 //connecting to db
 mongoose.connect(config.database_url, { useNewUrlParser: true })
@@ -24,6 +29,13 @@ mongoose.connect(config.database_url, { useNewUrlParser: true })
             console.error(err)
         }
     )
+
+//routes
+app.get("/user", function(req, res){
+    res.send("Hello user")
+})
+app.use("/api", router)
+
 
 
 //  server
