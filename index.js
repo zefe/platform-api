@@ -20,7 +20,7 @@ app.use(express.urlencoded({extended: true}))
 app.use(express.static(path.join(__dirname, 'public')))
 
 //connecting to db
-mongoose.connect(config.database_url, { useNewUrlParser: true })
+mongoose.connect(config.database_url,  { useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true })
     .then(
         () => {
             console.log('Database connected')
