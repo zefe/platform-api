@@ -1,6 +1,6 @@
 import routerx from 'express-promise-router';
 import usuarioController from '../controllers/usuarioController';
-import auth from '../middleware/auth';
+import auth from '../middlewares/auth';
 
 const router=routerx();
 
