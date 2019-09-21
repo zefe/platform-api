@@ -1,5 +1,6 @@
 import models from '../models/';
 import bcrypt from 'bcryptjs';
+import createToken from '../services/token';
 export default {
     add: async (req,res,next) =>{
         try {
@@ -88,6 +89,32 @@ export default {
         } catch(e){
             res.status(500).send({
                 message:'Ocurrió un error'
+            });
+            next(e);
+        }
+    },
+    login: async (req,res,next) => {
+        try {
+            let user = await models.Usuario.findOne({email: req.body.email, estado:1});
+            if(user){
+                //Existe el usuario
+                let match = await bcrypt.compare(req.body.password,user.password);
+                if(match){
+                    let token = await createToken.encode(user._id);
+                    res.status(200).json({user, token});
+                } else {
+                    res.status(404).send({
+                        message: 'Password incorrecto'
+                    })
+                }
+            } else {
+                res.status(404).send({
+                    message: 'El usario no existe'
+                })
+            }
+        } catch (e) {
+            res.status(500).send({
+                message: 'Ocurrio un error'
             });
             next(e);
         }
